@@ -8,10 +8,11 @@
 
 import UIKit
 import Alamofire
+//import SwiftyJSON
 
 class MasterViewController: UITableViewController {
     
-    var ACS_API_KEY = ""
+    var ACS_API_KEY = "HzglgNio7nxobLpXOi9tLmUg1MSF2hN2"
     var ACS_BASE_URL = "https://api.cloud.appcelerator.com/v1/"
     
     struct PhotoInfo {
@@ -57,18 +58,14 @@ class MasterViewController: UITableViewController {
             parameters: [
                 "login" : "myadminuser",
                 "password" : "password123"
-            ]).responseJSON() {
-                (request, response, JSON, error) in
+            ]).response { request, response, JSONResponse, error in
                 
-                println(JSON)
                 
-                var response = JSON!.valueForKey("response") as? NSDictionary
+                var json = JSON(data:JSONResponse as NSData)
+
                 
-                if ( response != nil) {
-                    println(response)
-                    var user: NSDictionary = (response!.valueForKey("users") as NSArray)[0] as NSDictionary
-                    println(user)
-                    
+                if ( json["response"] ) {
+                    var user = (json["response"]["users"])[0];
                     
                     // Successful login, now get the photos - Queue API calls
                     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) {
@@ -91,8 +88,7 @@ class MasterViewController: UITableViewController {
                         })
                     }
                 } else {
-                    var error = JSON!.valueForKey("meta") as NSDictionary
-                    var errorMessage = error.valueForKey("message") as String
+                    var errorMessage:String = json["meta"]["message"].stringValue!
                     self.simpleAlert(errorMessage)
                 }
         }
@@ -103,39 +99,35 @@ class MasterViewController: UITableViewController {
             parameters: [
                 "page" : 1,
                 "per_page" : 100
-            ]).responseJSON() {
-                (request, response, JSON, error) in
+            ]).response {
+                (request, response, JSONResponse, error) in
                 
-                var response = JSON!.valueForKey("response") as? NSDictionary
+                //var response = JSON!.valueForKey("response") as? NSDictionary
                 var photoInfos = [PhotoInfo]()
                 
-                if ( response != nil) {
-                    println(response)
-                    var photos = response!.valueForKey("photos") as [NSDictionary]
-                    println(photos)
+                var json = JSON(data:JSONResponse as NSData)
+                
+                if ( json["response"] ) {
+
                     
-                    photoInfos = photos.map({
-                        (var item) -> PhotoInfo in
-                        
-                        var idvalue = item["id"] as String
-                        var customFields = item["custom_fields"] as? NSDictionary
-                        var location:String
-                        
-                        if (customFields != nil) {
-                            location = customFields?.valueForKey("location_string") as String
-                        } else {
-                            location = "Missing Location"
+                    if let items = json["response"]["photos"].arrayValue {
+                        for item in items {
+                            
+                            if let idValue = item["id"].stringValue {
+                                println(idValue)
+                                
+                                var location = item["custom_fields"]["location_string"].stringValue
+                                if  (location == nil) {
+                                    location = "Missing Location"
+                                }
+                                photoInfos.append(PhotoInfo(_id:idValue, location : location!))
+                            }
                         }
-                        println(" \(idvalue)   \(location) ")
-                        
-                        // create an object and return it
-                        
-                        return PhotoInfo(_id:idvalue, location : location)
-                    })
+                    }
+
                     _callback(photoInfos,nil)
                 } else {
-                    var error = JSON!.valueForKey("meta") as NSDictionary
-                    var errorMessage = error.valueForKey("message") as String
+                    var errorMessage:String = json["meta"]["message"].stringValue!
                     _callback([],errorMessage)
                 }
                 

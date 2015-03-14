@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8D04B6931AB4B39800E89DE1 /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D04B6921AB4B39800E89DE1 /* SwiftyJSON.swift */; };
+		8D04B6941AB4B44E00E89DE1 /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D04B6921AB4B39800E89DE1 /* SwiftyJSON.swift */; };
 		8DB4DE011AB3ECE900F30DB2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DB4DE001AB3ECE900F30DB2 /* AppDelegate.swift */; };
 		8DB4DE031AB3ECE900F30DB2 /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DB4DE021AB3ECE900F30DB2 /* MasterViewController.swift */; };
 		8DB4DE051AB3ECE900F30DB2 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DB4DE041AB3ECE900F30DB2 /* DetailViewController.swift */; };
@@ -78,6 +80,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		8D04B6921AB4B39800E89DE1 /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
 		8DB4DDFB1AB3ECE900F30DB2 /* testInClassSwift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = testInClassSwift.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8DB4DDFF1AB3ECE900F30DB2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8DB4DE001AB3ECE900F30DB2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -111,11 +114,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8D04B68E1AB4B38500E89DE1 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				8D04B6921AB4B39800E89DE1 /* SwiftyJSON.swift */,
+			);
+			name = Services;
+			sourceTree = "<group>";
+		};
 		8DB4DDF21AB3ECE900F30DB2 = {
 			isa = PBXGroup;
 			children = (
 				8DB4DE221AB3EFD000F30DB2 /* Alamofire.xcodeproj */,
 				8DB4DDFD1AB3ECE900F30DB2 /* testInClassSwift */,
+				8D04B68E1AB4B38500E89DE1 /* Services */,
 				8DB4DE151AB3ECE900F30DB2 /* testInClassSwiftTests */,
 				8DB4DDFC1AB3ECE900F30DB2 /* Products */,
 			);
@@ -320,6 +332,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8D04B6931AB4B39800E89DE1 /* SwiftyJSON.swift in Sources */,
 				8DB4DE051AB3ECE900F30DB2 /* DetailViewController.swift in Sources */,
 				8DB4DE031AB3ECE900F30DB2 /* MasterViewController.swift in Sources */,
 				8DB4DE011AB3ECE900F30DB2 /* AppDelegate.swift in Sources */,
@@ -331,6 +344,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8DB4DE191AB3ECE900F30DB2 /* testInClassSwiftTests.swift in Sources */,
+				8D04B6941AB4B44E00E89DE1 /* SwiftyJSON.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
