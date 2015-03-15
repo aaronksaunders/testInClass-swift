@@ -8,7 +8,7 @@
 
 import UIKit
 import Alamofire
-//import SwiftyJSON
+import Haneke
 
 class MasterViewController: UITableViewController {
     
@@ -18,6 +18,8 @@ class MasterViewController: UITableViewController {
     struct PhotoInfo {
         var _id:String
         var location: String
+        var filename:String
+        var thumbURL:String
     }
     
     // Array of Photo Objects
@@ -114,13 +116,19 @@ class MasterViewController: UITableViewController {
                         for item in items {
                             
                             if let idValue = item["id"].stringValue {
-                                println(idValue)
+                                
                                 
                                 var location = item["custom_fields"]["location_string"].stringValue
                                 if  (location == nil) {
                                     location = "Missing Location"
                                 }
-                                photoInfos.append(PhotoInfo(_id:idValue, location : location!))
+                                
+                                var filename = item["filename"].stringValue
+                                var thumbURL =  item["urls"]["small_240"].stringValue ?? item["urls"]["preview"].stringValue
+                                
+                                println(thumbURL)
+                                
+                                photoInfos.append(PhotoInfo(_id:idValue, location : location!, filename : filename!, thumbURL : thumbURL!))
                             }
                         }
                     }
@@ -159,21 +167,39 @@ class MasterViewController: UITableViewController {
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        println(objects.count)
         return objects.count
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as UITableViewCell
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> PhotoTableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier("CCell", forIndexPath: indexPath) as PhotoTableViewCell
         
         let object = objects[indexPath.row] as PhotoInfo
-        cell.textLabel!.text = object.location
+        cell.mainTitle!.text = object.filename
+        cell.subTitle!.text = object.location
+        
+        let URL = NSURL(string:object.thumbURL)!
+
+
+        
+        let cache = Shared.imageCache
+        let fetcher = NetworkFetcher<UIImage>(URL: URL)
+        cache.fetch(fetcher: fetcher).onSuccess { image in
+            // Do something with image
+            
+            cell.thumbView?.bounds = CGRectMake(8,2, 74, 74)
+            cell.thumbView?.clipsToBounds = true
+            cell.thumbView?.contentMode = .ScaleAspectFit
+            cell.thumbView?.image = image
+            print()
+        }
+ 
+
         return cell
     }
     
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
         // Return false if you do not want the specified item to be editable.
-        return true
+        return false
     }
     
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {

@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14A389" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="rS3-R9-Ivy">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Master-->
@@ -26,29 +27,58 @@
         <scene sceneID="VgW-fR-Quf">
             <objects>
                 <tableViewController title="Master" id="pGg-6v-bdr" customClass="MasterViewController" customModule="testInClassSwift" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="mLL-gJ-YKr">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="100" sectionHeaderHeight="22" sectionFooterHeight="22" id="mLL-gJ-YKr">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="692"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" textLabel="2pz-XF-uhl" style="IBUITableViewCellStyleDefault" id="m0d-ak-lc9">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="CCell" rowHeight="100" id="m0d-ak-lc9" customClass="PhotoTableViewCell" customModule="testInClassSwift">
                                 <rect key="frame" x="0.0" y="86" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="m0d-ak-lc9" id="d3P-M7-ByW">
                                     <rect key="frame" x="0.0" y="0.0" width="287" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="2pz-XF-uhl">
-                                            <rect key="frame" x="15" y="0.0" width="270" height="43"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="obl-go-j5A">
+                                            <rect key="frame" x="100" y="10" width="273" height="38"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="38" id="1Wf-V9-Jel"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                            <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
                                         </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pmh-ft-4Ja">
+                                            <rect key="frame" x="100" y="56" width="273" height="38"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <imageView autoresizesSubviews="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="voy-7q-b8y">
+                                            <rect key="frame" x="18" y="10" width="74" height="74"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="74" id="sp1-Md-iLV"/>
+                                            </constraints>
+                                        </imageView>
                                     </subviews>
+                                    <constraints>
+                                        <constraint firstItem="voy-7q-b8y" firstAttribute="top" secondItem="d3P-M7-ByW" secondAttribute="topMargin" constant="2" id="4CZ-hk-amI"/>
+                                        <constraint firstItem="obl-go-j5A" firstAttribute="leading" secondItem="voy-7q-b8y" secondAttribute="trailing" constant="8" symbolic="YES" id="7hU-wh-gjs"/>
+                                        <constraint firstItem="obl-go-j5A" firstAttribute="trailing" secondItem="d3P-M7-ByW" secondAttribute="trailingMargin" id="977-tV-C89"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="voy-7q-b8y" secondAttribute="bottom" constant="7" id="ADF-7X-P7K"/>
+                                        <constraint firstItem="voy-7q-b8y" firstAttribute="leading" secondItem="d3P-M7-ByW" secondAttribute="leadingMargin" constant="10" id="PP9-0b-QYJ"/>
+                                        <constraint firstItem="pmh-ft-4Ja" firstAttribute="top" secondItem="obl-go-j5A" secondAttribute="bottom" constant="8" symbolic="YES" id="WCd-vK-2xf"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="pmh-ft-4Ja" secondAttribute="bottom" constant="-3" id="ckc-qF-auf"/>
+                                        <constraint firstItem="obl-go-j5A" firstAttribute="top" secondItem="voy-7q-b8y" secondAttribute="top" id="dUt-Sc-RFE"/>
+                                        <constraint firstItem="obl-go-j5A" firstAttribute="trailing" secondItem="pmh-ft-4Ja" secondAttribute="trailing" id="qLt-dC-b05"/>
+                                        <constraint firstItem="pmh-ft-4Ja" firstAttribute="leading" secondItem="obl-go-j5A" secondAttribute="leading" id="vcm-gL-QX1"/>
+                                    </constraints>
                                 </tableViewCellContentView>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
+                                    <outlet property="mainTitle" destination="obl-go-j5A" id="Aod-0P-Rtw"/>
+                                    <outlet property="subTitle" destination="pmh-ft-4Ja" id="6qm-zY-NW1"/>
+                                    <outlet property="thumbView" destination="voy-7q-b8y" id="gdQ-ET-WJO"/>
                                     <segue destination="Ah7-4n-0Wa" kind="show" identifier="showDetail" id="jUr-3t-vfg"/>
                                 </connections>
                             </tableViewCell>
@@ -63,7 +93,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6Cn-md-YlS" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="605" y="64"/>
+            <point key="canvasLocation" x="605" y="58"/>
         </scene>
         <!--Detail-->
         <scene sceneID="Cn3-H9-jdl">
