@@ -49,7 +49,7 @@ class MasterViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    func simpleAlert(_message:String) {
+    func simpleAlert(_message:String?) {
         var alert = UIAlertController(title: "Error Message", message: _message, preferredStyle: UIAlertControllerStyle.Alert)
         alert.addAction(UIAlertAction(title: "Close", style: UIAlertActionStyle.Default, handler: nil))
         self.presentViewController(alert, animated: true, completion: nil)
@@ -61,13 +61,15 @@ class MasterViewController: UITableViewController {
             parameters: [
                 "login" : "myadminuser",
                 "password" : "password123"
-            ]).response { request, response, JSONResponse, error in
+            ]).response { (request, response, JSONResponse, error) in
                 
                 
                 var json = JSON(data:JSONResponse as NSData)
 
-                
-                if ( json["response"] ) {
+
+                if let e:NSError = error {
+                    self.simpleAlert(e.localizedDescription)
+                } else if ( json["response"] ) {
                     var user = (json["response"]["users"])[0];
                     
                     // Successful login, now get the photos - Queue API calls
