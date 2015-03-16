@@ -20,6 +20,7 @@ class MasterViewController: UITableViewController {
         var location: String
         var filename:String
         var thumbURL:String
+        var originalURL:String
     }
     
     // Array of Photo Objects
@@ -125,10 +126,11 @@ class MasterViewController: UITableViewController {
                                 
                                 var filename = item["filename"].stringValue
                                 var thumbURL =  item["urls"]["small_240"].stringValue ?? item["urls"]["preview"].stringValue
+                                var originalURL =  item["urls"]["original"].stringValue
                                 
                                 println(thumbURL)
                                 
-                                photoInfos.append(PhotoInfo(_id:idValue, location : location!, filename : filename!, thumbURL : thumbURL!))
+                                photoInfos.append(PhotoInfo(_id:idValue, location : location!, filename : filename!, thumbURL : thumbURL!, originalURL : originalURL!))
                             }
                         }
                     }

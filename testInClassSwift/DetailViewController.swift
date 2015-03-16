@@ -7,16 +7,18 @@
 //
 
 import UIKit
+import Haneke
 
 class DetailViewController: UIViewController {
 
     @IBOutlet weak var detailDescriptionLabel: UILabel!
 
+    @IBOutlet weak var largeImageView: UIImageView!
 
     var detailItem: MasterViewController.PhotoInfo? {
         didSet {
             // Update the view.
-            self.configureView()
+            //self.configureView()
         }
     }
 
@@ -25,6 +27,17 @@ class DetailViewController: UIViewController {
         if let detail: MasterViewController.PhotoInfo = self.detailItem {
             if let label = self.detailDescriptionLabel {
                 label.text = " \(detail.location)  \(detail._id)"
+            }
+            
+            let cache = Shared.imageCache
+            let fetcher = NetworkFetcher<UIImage>(URL: NSURL(string:detail.originalURL)!)
+            cache.fetch(fetcher: fetcher).onSuccess { image in
+                // Do something with image
+                
+                //cell.thumbView?.bounds = CGRectMake(8,2, 74, 74)
+                self.largeImageView?.clipsToBounds = true
+                self.largeImageView?.contentMode = .ScaleAspectFit
+                self.largeImageView?.image = image
             }
         }
     }
