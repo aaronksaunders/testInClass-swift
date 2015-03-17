@@ -11,6 +11,8 @@
 		8D01C05D1AB5425200C96B44 /* Haneke.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8D01C0551AB541D000C96B44 /* Haneke.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8D04B6931AB4B39800E89DE1 /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D04B6921AB4B39800E89DE1 /* SwiftyJSON.swift */; };
 		8D04B6941AB4B44E00E89DE1 /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D04B6921AB4B39800E89DE1 /* SwiftyJSON.swift */; };
+		8D513C681AB7BFEC00837F87 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D513C671AB7BFEC00837F87 /* MapKit.framework */; };
+		8D513C6A1AB7C11B00837F87 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D513C691AB7C11B00837F87 /* MapViewController.swift */; };
 		8DB4DE011AB3ECE900F30DB2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DB4DE001AB3ECE900F30DB2 /* AppDelegate.swift */; };
 		8DB4DE031AB3ECE900F30DB2 /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DB4DE021AB3ECE900F30DB2 /* MasterViewController.swift */; };
 		8DB4DE051AB3ECE900F30DB2 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DB4DE041AB3ECE900F30DB2 /* DetailViewController.swift */; };
@@ -123,6 +125,8 @@
 		8D01BFC61AB5369E00C96B44 /* PhotoTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoTableViewCell.swift; sourceTree = "<group>"; };
 		8D01C04D1AB541D000C96B44 /* Haneke.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Haneke.xcodeproj; path = "HanekeSwift-master/Haneke.xcodeproj"; sourceTree = "<group>"; };
 		8D04B6921AB4B39800E89DE1 /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
+		8D513C671AB7BFEC00837F87 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		8D513C691AB7C11B00837F87 /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		8DB4DDFB1AB3ECE900F30DB2 /* testInClassSwift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = testInClassSwift.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8DB4DDFF1AB3ECE900F30DB2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8DB4DE001AB3ECE900F30DB2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -142,6 +146,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8D513C681AB7BFEC00837F87 /* MapKit.framework in Frameworks */,
 				8DB4DE311AB3EFFC00F30DB2 /* Alamofire.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -177,6 +182,7 @@
 		8DB4DDF21AB3ECE900F30DB2 = {
 			isa = PBXGroup;
 			children = (
+				8D513C671AB7BFEC00837F87 /* MapKit.framework */,
 				8D01C04D1AB541D000C96B44 /* Haneke.xcodeproj */,
 				8DB4DE221AB3EFD000F30DB2 /* Alamofire.xcodeproj */,
 				8DB4DDFD1AB3ECE900F30DB2 /* testInClassSwift */,
@@ -206,6 +212,7 @@
 				8DB4DE0B1AB3ECE900F30DB2 /* LaunchScreen.xib */,
 				8DB4DDFE1AB3ECE900F30DB2 /* Supporting Files */,
 				8D01BFC61AB5369E00C96B44 /* PhotoTableViewCell.swift */,
+				8D513C691AB7C11B00837F87 /* MapViewController.swift */,
 			);
 			path = testInClassSwift;
 			sourceTree = "<group>";
@@ -300,6 +307,14 @@
 					8DB4DDFA1AB3ECE900F30DB2 = {
 						CreatedOnToolsVersion = 6.1.1;
 						DevelopmentTeam = X49GQ889BB;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+							com.apple.Maps.iOS = {
+								enabled = 1;
+							};
+						};
 					};
 					8DB4DE111AB3ECE900F30DB2 = {
 						CreatedOnToolsVersion = 6.1.1;
@@ -414,6 +429,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D01BFC71AB5369E00C96B44 /* PhotoTableViewCell.swift in Sources */,
+				8D513C6A1AB7C11B00837F87 /* MapViewController.swift in Sources */,
 				8D04B6931AB4B39800E89DE1 /* SwiftyJSON.swift in Sources */,
 				8DB4DE051AB3ECE900F30DB2 /* DetailViewController.swift in Sources */,
 				8DB4DE031AB3ECE900F30DB2 /* MasterViewController.swift in Sources */,
