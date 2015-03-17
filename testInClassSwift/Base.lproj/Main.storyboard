@@ -120,16 +120,31 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="kob-ll-tXx">
                                 <rect key="frame" x="16" y="168" width="382" height="481"/>
                             </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="teK-89-6uM">
+                                <rect key="frame" x="258" y="657" width="140" height="30"/>
+                                <color key="backgroundColor" red="0.40269218271491303" green="1" blue="0.28848518230500853" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="140" id="N33-9L-ver"/>
+                                </constraints>
+                                <state key="normal" title="SHOW MAP">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <segue destination="3nw-Wu-CsJ" kind="show" identifier="showMap" id="DQx-Fp-YKe"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="kob-ll-tXx" firstAttribute="trailing" secondItem="MMQ-IT-qOo" secondAttribute="trailingMargin" id="5xy-BJ-3q4"/>
                             <constraint firstItem="Lei-5M-9Gs" firstAttribute="leading" secondItem="MMQ-IT-qOo" secondAttribute="leadingMargin" id="AHK-k8-fwY"/>
+                            <constraint firstItem="teK-89-6uM" firstAttribute="trailing" secondItem="kob-ll-tXx" secondAttribute="trailing" id="IZr-2D-En3"/>
                             <constraint firstItem="kob-ll-tXx" firstAttribute="top" secondItem="Lei-5M-9Gs" secondAttribute="bottom" constant="28" id="Ju6-0r-Xi1"/>
                             <constraint firstItem="a0L-h9-sNL" firstAttribute="top" secondItem="kob-ll-tXx" secondAttribute="bottom" constant="43" id="dEP-XB-FUA"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Lei-5M-9Gs" secondAttribute="trailing" constant="-8" id="j4S-ml-zXa"/>
                             <constraint firstItem="Lei-5M-9Gs" firstAttribute="top" secondItem="cIm-e0-J51" secondAttribute="bottom" constant="8" symbolic="YES" id="l61-qu-hsk"/>
                             <constraint firstItem="kob-ll-tXx" firstAttribute="leading" secondItem="Lei-5M-9Gs" secondAttribute="leading" id="rym-Mm-dsi"/>
+                            <constraint firstItem="teK-89-6uM" firstAttribute="top" secondItem="kob-ll-tXx" secondAttribute="bottom" constant="8" symbolic="YES" id="uTo-7f-fmT"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Detail" id="cra-N8-TIN"/>
@@ -141,6 +156,41 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lrm-kH-fPn" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1027" y="-222"/>
+        </scene>
+        <!--Map View-->
+        <scene sceneID="WrL-3M-YKA">
+            <objects>
+                <viewController storyboardIdentifier="mapView" title="Map View" id="3nw-Wu-CsJ" customClass="MapViewController" customModule="testInClassSwift" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="xvZ-Q3-qQH"/>
+                        <viewControllerLayoutGuide type="bottom" id="7S2-au-BQR"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="XX8-VA-Ubt">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="692"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="dZb-TA-hZC">
+                                <rect key="frame" x="0.0" y="70" width="414" height="646"/>
+                            </mapView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="dZb-TA-hZC" secondAttribute="trailing" id="2MY-Lp-Tvt"/>
+                            <constraint firstItem="dZb-TA-hZC" firstAttribute="top" secondItem="xvZ-Q3-qQH" secondAttribute="bottom" constant="6" id="adi-o6-McB"/>
+                            <constraint firstItem="dZb-TA-hZC" firstAttribute="leading" secondItem="XX8-VA-Ubt" secondAttribute="leading" id="kAB-kf-d2L"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="dZb-TA-hZC" secondAttribute="bottom" constant="-24" id="wdK-gb-Z01"/>
+                        </constraints>
+                    </view>
+                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
+                    <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina55"/>
+                    <connections>
+                        <outlet property="mapView" destination="dZb-TA-hZC" id="8zU-Xl-DrJ"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="zcc-V1-eqU" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1535" y="-222"/>
         </scene>
     </scenes>
 </document>

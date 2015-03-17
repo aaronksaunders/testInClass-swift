@@ -9,6 +9,7 @@
 import UIKit
 import Alamofire
 import Haneke
+import MapKit
 
 class MasterViewController: UITableViewController {
     
@@ -21,6 +22,7 @@ class MasterViewController: UITableViewController {
         var filename:String
         var thumbURL:String
         var originalURL:String
+        var coordinates : CLLocationCoordinate2D?
     }
     
     // Array of Photo Objects
@@ -122,8 +124,14 @@ class MasterViewController: UITableViewController {
                                 
                                 
                                 var location = item["custom_fields"]["location_string"].stringValue
+                                var coordinates:CLLocationCoordinate2D?
+                                
                                 if  (location == nil) {
                                     location = "Missing Location"
+                                } else {
+                                    var lat = item["custom_fields"]["coordinates"].arrayValue?[0][1].doubleValue
+                                    var lng = item["custom_fields"]["coordinates"].arrayValue?[0][0].doubleValue
+                                    coordinates = CLLocationCoordinate2DMake(lat!, lng!)
                                 }
                                 
                                 var filename = item["filename"].stringValue
@@ -132,7 +140,7 @@ class MasterViewController: UITableViewController {
                                 
                                 println(thumbURL)
                                 
-                                photoInfos.append(PhotoInfo(_id:idValue, location : location!, filename : filename!, thumbURL : thumbURL!, originalURL : originalURL!))
+                                photoInfos.append(PhotoInfo(_id:idValue, location : location!, filename : filename!, thumbURL : thumbURL!, originalURL : originalURL!,coordinates:coordinates))
                             }
                         }
                     }
