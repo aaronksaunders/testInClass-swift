@@ -10,8 +10,9 @@ import UIKit
 import Alamofire
 import Haneke
 import MapKit
+import MobileCoreServices
 
-class MasterViewController: UITableViewController {
+class MasterViewController: UITableViewController,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
     
     var ACS_API_KEY = "HzglgNio7nxobLpXOi9tLmUg1MSF2hN2"
     var ACS_BASE_URL = "https://api.cloud.appcelerator.com/v1/"
@@ -67,8 +68,8 @@ class MasterViewController: UITableViewController {
                 
                 
                 var json = JSON(data:JSONResponse as NSData)
-
-
+                
+                
                 if let e:NSError = error {
                     self.simpleAlert(e.localizedDescription)
                 } else if ( json["response"] ) {
@@ -115,7 +116,7 @@ class MasterViewController: UITableViewController {
                 var json = JSON(data:JSONResponse as NSData)
                 
                 if ( json["response"] ) {
-
+                    
                     
                     if let items = json["response"]["photos"].arrayValue {
                         for item in items {
@@ -144,7 +145,7 @@ class MasterViewController: UITableViewController {
                             }
                         }
                     }
-
+                    
                     _callback(photoInfos,nil)
                 } else {
                     var errorMessage:String = json["meta"]["message"].stringValue!
@@ -154,13 +155,108 @@ class MasterViewController: UITableViewController {
                 
         }
     }
-    
-    func insertNewObject(sender: AnyObject) {
-        //objects.insertObject(NSDate(), atIndex: 0)
-        let indexPath = NSIndexPath(forRow: 0, inSection: 0)
-        self.tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
+    // MARK: - Camera
+    func cameraSupportsMedia(mediaType: String, sourceType: UIImagePickerControllerSourceType) -> Bool{
+        
+        let availableMediaTypes = UIImagePickerController.availableMediaTypesForSourceType(sourceType) as [String]?
+        
+        if let types = availableMediaTypes{
+            for type in types{
+                if type == mediaType{
+                    return true
+                }
+            }
+        }
+        
+        return false
     }
     
+    func doesCameraSupportShootingVideos() -> Bool{
+        return cameraSupportsMedia(kUTTypeMovie as NSString, sourceType: .Camera)
+    }
+    
+    func doesCameraSupportTakingPhotos() -> Bool{
+        //return cameraSupportsMedia(kUTTypeImage as NSString, sourceType: .Camera)
+        return true
+    }
+    
+    func imagePickerController(picker: UIImagePickerController,
+        didFinishPickingMediaWithInfo info: [NSObject : AnyObject]){
+            
+            println("Picker returned successfully")
+            
+            let mediaType:AnyObject? = info[UIImagePickerControllerMediaType]
+            
+            if let type:AnyObject = mediaType{
+                
+                if type is String{
+                    let stringType = type as String
+                    
+                    if stringType == kUTTypeMovie as String{
+                        let urlOfVideo = info[UIImagePickerControllerMediaURL] as? NSURL
+                        if let url = urlOfVideo{
+                            println("Video URL = \(url)")
+                        }
+                    }
+                        
+                    else if stringType == kUTTypeImage as String{
+                        /* Let's get the metadata. This is only for images. Not videos */
+                        let metadata = info[UIImagePickerControllerMediaMetadata]
+                            as? NSDictionary
+                        if let theMetaData = metadata{
+                            let image = info[UIImagePickerControllerOriginalImage]
+                                as? UIImage
+                            if let theImage = image{
+                                println("Image Metadata = \(theMetaData)")
+                                println("Image = \(theImage)")
+                            }
+                        }
+                    }
+                    
+                }
+            }
+            
+            picker.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func insertNewObject(sender: AnyObject) {
+        
+        var imagePickerCtrl: UIImagePickerController?
+        
+        //objects.insertObject(NSDate(), atIndex: 0)
+        //let indexPath = NSIndexPath(forRow: 0, inSection: 0)
+        //self.tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
+        
+        
+        if  doesCameraSupportTakingPhotos(){
+            
+            imagePickerCtrl = UIImagePickerController()
+            
+            if let theController = imagePickerCtrl {
+                theController.sourceType = .PhotoLibrary
+                
+                theController.mediaTypes = [kUTTypeImage as NSString]
+                
+                theController.allowsEditing = true
+                theController.delegate = self
+                
+                presentViewController(theController, animated: true, completion: nil)
+            }
+            
+        } else {
+            simpleAlert("Camera is not available")
+        }
+        
+    }
+    
+    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
+        println("Picker was cancelled")
+        picker.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func isCameraAvailable() -> Bool{
+        return UIImagePickerController.isSourceTypeAvailable(.Camera)
+    }
     // MARK: - Segues
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -190,8 +286,8 @@ class MasterViewController: UITableViewController {
         cell.subTitle!.text = object.location
         
         let URL = NSURL(string:object.thumbURL)!
-
-
+        
+        
         
         let cache = Shared.imageCache
         let fetcher = NetworkFetcher<UIImage>(URL: URL)
@@ -204,8 +300,8 @@ class MasterViewController: UITableViewController {
             cell.thumbView?.image = image
             print()
         }
- 
-
+        
+        
         return cell
     }
     
