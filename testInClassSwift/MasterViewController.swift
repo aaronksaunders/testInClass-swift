@@ -16,6 +16,7 @@ class MasterViewController: UITableViewController,UIImagePickerControllerDelegat
     
     var ACS_API_KEY = "HzglgNio7nxobLpXOi9tLmUg1MSF2hN2"
     var ACS_BASE_URL = "https://api.cloud.appcelerator.com/v1/"
+    var SESSION_ID = ""
     
     struct PhotoInfo {
         var _id:String
@@ -74,6 +75,10 @@ class MasterViewController: UITableViewController,UIImagePickerControllerDelegat
                     self.simpleAlert(e.localizedDescription)
                 } else if ( json["response"] ) {
                     var user = (json["response"]["users"])[0];
+                    
+                    
+                    self.SESSION_ID = json["meta"]["session_id"].stringValue!
+                    println(self.SESSION_ID)
                     
                     // Successful login, now get the photos - Queue API calls
                     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) {
@@ -176,8 +181,8 @@ class MasterViewController: UITableViewController,UIImagePickerControllerDelegat
     }
     
     func doesCameraSupportTakingPhotos() -> Bool{
-        //return cameraSupportsMedia(kUTTypeImage as NSString, sourceType: .Camera)
-        return true
+        return cameraSupportsMedia(kUTTypeImage as NSString, sourceType: .Camera)
+        //return true
     }
     
     func imagePickerController(picker: UIImagePickerController,
@@ -206,6 +211,9 @@ class MasterViewController: UITableViewController,UIImagePickerControllerDelegat
                         if let theMetaData = metadata{
                             let image = info[UIImagePickerControllerOriginalImage]
                                 as? UIImage
+                            
+                            uploadImage(image!);
+                            
                             if let theImage = image{
                                 println("Image Metadata = \(theMetaData)")
                                 println("Image = \(theImage)")
@@ -219,6 +227,60 @@ class MasterViewController: UITableViewController,UIImagePickerControllerDelegat
             picker.dismissViewControllerAnimated(true, completion: nil)
     }
     
+    func uploadImage(image:UIImage ) {
+        var parameters = [
+            "photo_sizes[preview]": "100x100#"
+        ]
+        let imageData = UIImageJPEGRepresentation(image,75.0)
+        let urlRequest = urlRequestWithComponents(ACS_BASE_URL+"photos/create.json?key="+ACS_API_KEY+"&_session_id=" + SESSION_ID, parameters: parameters, imageData: imageData)
+        
+        Alamofire.upload(urlRequest.0, urlRequest.1)
+            .progress { (bytesWritten, totalBytesWritten, totalBytesExpectedToWrite) in
+                println("\(totalBytesWritten) / \(totalBytesExpectedToWrite)")
+            }
+            .responseJSON { (request, response, JSON, error) in
+                println("REQUEST \(request)")
+                println("RESPONSE \(response)")
+                println("JSON \(JSON)")
+                println("ERROR \(error)")
+        }
+    }
+    
+    // this function creates the required URLRequestConvertible and NSData we need to use Alamofire.upload
+    func urlRequestWithComponents(urlString:String, parameters:Dictionary<String, String>, imageData:NSData) -> (URLRequestConvertible, NSData) {
+        
+        // create url request to send
+        var mutableURLRequest = NSMutableURLRequest(URL: NSURL(string: urlString)!)
+        mutableURLRequest.HTTPMethod = Alamofire.Method.POST.rawValue
+        let boundaryConstant = "NET-POST-boundary-\(arc4random())-\(arc4random())"
+        let contentType = "multipart/form-data; boundary="+boundaryConstant
+        mutableURLRequest.setValue(contentType, forHTTPHeaderField: "Content-Type")
+        
+        
+        
+        // create upload data to send
+        let uploadData = NSMutableData()
+        
+        // add image
+        uploadData.appendData("--\(boundaryConstant)\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+        
+        uploadData.appendData("Content-Disposition: form-data; name=\"photo\"; filename=\"file.png\"\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+        uploadData.appendData("Content-Type: application/octet-stream\r\n\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+        // causes ERROR - uploadData.appendData("Content-Length: \(imageData.length)\r\n\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+        uploadData.appendData(imageData)
+        
+        // add parameters
+        for (key, value) in parameters {
+            uploadData.appendData("\r\n--\(boundaryConstant)\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+            uploadData.appendData("Content-Disposition: form-data; name=\"\(key)\"\r\n\r\n\(value)".dataUsingEncoding(NSUTF8StringEncoding)!)
+        }
+        uploadData.appendData("\r\n--\(boundaryConstant)--\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+        
+        
+        
+        // return URLRequestConvertible and NSData
+        return (Alamofire.ParameterEncoding.URL.encode(mutableURLRequest, parameters: nil).0, uploadData)
+    }
     func insertNewObject(sender: AnyObject) {
         
         var imagePickerCtrl: UIImagePickerController?
@@ -233,7 +295,7 @@ class MasterViewController: UITableViewController,UIImagePickerControllerDelegat
             imagePickerCtrl = UIImagePickerController()
             
             if let theController = imagePickerCtrl {
-                theController.sourceType = .PhotoLibrary
+                theController.sourceType = .Camera
                 
                 theController.mediaTypes = [kUTTypeImage as NSString]
                 
