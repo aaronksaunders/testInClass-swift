@@ -12,6 +12,7 @@ import Haneke
 import MapKit
 import MobileCoreServices
 
+
 class MasterViewController: UITableViewController,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
     
     var ACS_API_KEY = "HzglgNio7nxobLpXOi9tLmUg1MSF2hN2"
@@ -61,6 +62,10 @@ class MasterViewController: UITableViewController,UIImagePickerControllerDelegat
     
     func loginUser() {
         
+        let loadingNotification = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        loadingNotification.mode = .Indeterminate
+        loadingNotification.labelText = "Loading"
+        
         Alamofire.request(.POST, ACS_BASE_URL+"users/login.json?key="+ACS_API_KEY,
             parameters: [
                 "login" : "myadminuser",
@@ -73,6 +78,7 @@ class MasterViewController: UITableViewController,UIImagePickerControllerDelegat
                 
                 if let e:NSError = error {
                     self.simpleAlert(e.localizedDescription)
+                    MBProgressHUD.hideAllHUDsForView(self.view, animated: true)
                 } else if ( json["response"] ) {
                     var user = (json["response"]["users"])[0];
                     
@@ -84,6 +90,8 @@ class MasterViewController: UITableViewController,UIImagePickerControllerDelegat
                     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) {
                         self.getPhotos({ (_photos:[PhotoInfo], _error:String?) -> Void in
                             println(_photos)
+                            
+                            MBProgressHUD.hideAllHUDsForView(self.view, animated: true)
                             
                             if (_photos.count != 0 ) {
                                 self.objects = _photos
@@ -227,49 +235,65 @@ class MasterViewController: UITableViewController,UIImagePickerControllerDelegat
             picker.dismissViewControllerAnimated(true, completion: nil)
     }
     
+    //
+    //
+    //
     func uploadImage(image:UIImage ) {
+        // set some basic params for photo creation
         var parameters = [
             "photo_sizes[preview]": "100x100#"
         ]
-        let imageData = UIImageJPEGRepresentation(image,75.0)
+        
+        // we are compressing the image abit to increase upload efficienst
+        let imageData = UIImageJPEGRepresentation(image,50.0)
         let urlRequest = urlRequestWithComponents(ACS_BASE_URL+"photos/create.json?key="+ACS_API_KEY+"&_session_id=" + SESSION_ID, parameters: parameters, imageData: imageData)
+        //let urlRequest = urlRequestWithComponents(ACS_BASE_URL+"photos/create.json", parameters: parameters, imageData: imageData)
+        
+        let loadingNotification = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        loadingNotification.mode = .Determinate
+        loadingNotification.labelText = "Uploading Image"
         
         Alamofire.upload(urlRequest.0, urlRequest.1)
             .progress { (bytesWritten, totalBytesWritten, totalBytesExpectedToWrite) in
                 println("\(totalBytesWritten) / \(totalBytesExpectedToWrite)")
+                let p = Float(totalBytesWritten)/Float(totalBytesExpectedToWrite)
+                loadingNotification.progress = p
             }
             .responseJSON { (request, response, JSON, error) in
                 println("REQUEST \(request)")
                 println("RESPONSE \(response)")
                 println("JSON \(JSON)")
                 println("ERROR \(error)")
+                
+                MBProgressHUD.hideAllHUDsForView(self.view, animated: true)
         }
     }
     
+    //
     // this function creates the required URLRequestConvertible and NSData we need to use Alamofire.upload
+    //
     func urlRequestWithComponents(urlString:String, parameters:Dictionary<String, String>, imageData:NSData) -> (URLRequestConvertible, NSData) {
         
         // create url request to send
         var mutableURLRequest = NSMutableURLRequest(URL: NSURL(string: urlString)!)
         mutableURLRequest.HTTPMethod = Alamofire.Method.POST.rawValue
-        let boundaryConstant = "NET-POST-boundary-\(arc4random())-\(arc4random())"
+        
+        
+        let boundaryConstant = "acs-post-boundary-\(arc4random())-\(arc4random())"
         let contentType = "multipart/form-data; boundary="+boundaryConstant
+        
         mutableURLRequest.setValue(contentType, forHTTPHeaderField: "Content-Type")
-        
-        
         
         // create upload data to send
         let uploadData = NSMutableData()
         
         // add image
         uploadData.appendData("--\(boundaryConstant)\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
-        
-        uploadData.appendData("Content-Disposition: form-data; name=\"photo\"; filename=\"file.png\"\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+        uploadData.appendData("Content-Disposition: form-data; name=\"photo\"; filename=\"file\(arc4random()).png\"\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
         uploadData.appendData("Content-Type: application/octet-stream\r\n\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
-        // causes ERROR - uploadData.appendData("Content-Length: \(imageData.length)\r\n\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
         uploadData.appendData(imageData)
         
-        // add parameters
+        // add additional post parameters
         for (key, value) in parameters {
             uploadData.appendData("\r\n--\(boundaryConstant)\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
             uploadData.appendData("Content-Disposition: form-data; name=\"\(key)\"\r\n\r\n\(value)".dataUsingEncoding(NSUTF8StringEncoding)!)
@@ -279,8 +303,18 @@ class MasterViewController: UITableViewController,UIImagePickerControllerDelegat
         
         
         // return URLRequestConvertible and NSData
+        var urlParams:[String: String] = Dictionary()
+        urlParams.updateValue(ACS_API_KEY, forKey: "key")
+        urlParams.updateValue(SESSION_ID, forKey: "_session_id")
+    
+        
+        // cannot figure out how to set params on URL, so will hard code for now @TODO
         return (Alamofire.ParameterEncoding.URL.encode(mutableURLRequest, parameters: nil).0, uploadData)
     }
+    
+    //
+    //
+    //
     func insertNewObject(sender: AnyObject) {
         
         var imagePickerCtrl: UIImagePickerController?
