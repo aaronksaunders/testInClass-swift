@@ -15,3 +15,4 @@ This solution includes three third-party libraries
 * [HanekeSwift](https://github.com/Haneke/HanekeSwift) - for image caching
 * [Alamofire](https://github.com/Alamofire/Alamofire) - Simplified http client
 * [SwiftyJSON](https://github.com/SwiftyJSON/SwiftyJSON) - working with JSON in Swift 
+* [MBProgressHUD](https://github.com/jdg/MBProgressHUD) - showing progress indicators
